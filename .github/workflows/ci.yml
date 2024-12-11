@@ -29,3 +29,34 @@ jobs:
           key: npm-cache-${{ runner.os }}-${{ hashFiles('**/package-lock.json') }}
           restore-keys: |
             npm-cache-${{ runner.os }}-
+      - name: Install dependencies
+        run: npm install
+      - name: Run tests
+        run: npm test
+  deploy:
+    name: Deploy Application
+    needs: build-and-test
+    runs-on: ubuntu-latest
+    environment:
+      name: production
+      url: http://example.com
+    steps:
+      # Step 1: Check out code
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      # Step 2: Setup Node.js environment
+      - name: Setup Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: 16
+
+      # Step 3: Deploy application (mock)
+      - name: Deploy application
+        run: echo "Deploying application to production..."
+
+      # Step 4: Display environment variables
+      - name: Display environment variables
+        run: |
+          echo "Global Env Var: $GLOBAL_ENV_VAR"
+          echo "Port: ${{ secrets.PORT }}"
