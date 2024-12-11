@@ -11,3 +11,10 @@ on:
 
 env:
   GLOBAL_ENV_VAR: "This is a global variable"
+jobs:
+  build-and-test:
+    name: Build and test application
+    runs-on: ubuntu-latest
+    steps:
+      -name: checkout repository
+      -uses: actions/checkout@v3
