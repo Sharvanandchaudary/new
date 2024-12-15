@@ -62,4 +62,4 @@ jobs:
           echo "Deploying application to production..."
           echo "API Key: $API_KEY"
           echo "Database URL: $DATABASE_URL"
-          echo "Port: $PORT
+          echo "Port: $PORT"
