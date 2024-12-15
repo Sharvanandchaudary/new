@@ -1,14 +1,16 @@
 {
-    "name": "node-app",
+    "name": "app",
     "version": "1.0.0",
     "description": "A sample Node.js application",
     "main": "src/app.js",
     "scripts": {
-      "test": "echo \"No tests yet\""
+        "test": "echo \"No tests yet\""
     },
-    "dependencies": {},
-    "devDependencies": {},
+    "dependencies": {
+        "dotenv": "^16.4.7",
+        "express": "^4.21.2"
+    },
     "author": "",
-    "license": "ISC"
-  }
-  
+    "license": "ISC",
+    "keywords": []
+}
