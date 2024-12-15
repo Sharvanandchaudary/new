@@ -4,6 +4,7 @@ on:
   push:
     branches:
       - main
+      - dev
   pull_request:
     branches:
       - main
@@ -31,7 +32,9 @@ jobs:
             npm-cache-${{ runner.os }}-
       - name: Install dependencies
         run: npm install
-      - name: Run tests
+      - name: Build the application
+        run: npm run build
+      - name: Run test
         run: npm test
   deploy:
     name: Deploy Application
@@ -50,13 +53,13 @@ jobs:
         uses: actions/setup-node@v3
         with:
           node-version: 16
-
-      # Step 3: Deploy application (mock)
       - name: Deploy application
-        run: echo "Deploying application to production..."
-
-      # Step 4: Display environment variables
-      - name: Display environment variables
+        env:
+          API_KEY: ${{ secrets.API_KEY }}
+          DATABASE_URL: ${{ secrets.DATABASE_URL }}
+          PORT: ${{ secrets.PORT }}
         run: |
-          echo "Global Env Var: $GLOBAL_ENV_VAR"
-          echo "Port: ${{ secrets.PORT }}"
+          echo "Deploying application to production..."
+          echo "API Key: $API_KEY"
+          echo "Database URL: $DATABASE_URL"
+          echo "Port: $PORT
