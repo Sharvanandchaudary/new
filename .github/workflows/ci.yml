@@ -14,9 +14,35 @@ env:
   GLOBAL_ENV_VAR: "This is a global variable"
 
 jobs:
+  test:
+    name: Run Tests and Generate Test Report
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v3
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: 16
+
+      - name: Install Dependencies (For Testing)
+        run: npm install
+
+      - name: Run Tests
+        run: npm test -- --reporters=default --reporters=jest-junit
+
+      - name: Upload Test Report
+        uses: actions/upload-artifact@v3
+        with:
+          name: test-report
+          path: junit.xml
+
   build:
     name: Build Application
     runs-on: ubuntu-latest
+    needs: test  # Only runs after the test job passes
+    if: success()  # Ensures this job only runs if tests pass
     steps:
       - name: Checkout Repository
         uses: actions/checkout@v3
@@ -42,60 +68,11 @@ jobs:
       - name: Build the Application
         run: npm run build
 
-  lint:
-    name: Run Linting and Generate Lint Report
-    runs-on: ubuntu-latest
-    needs: build
-    steps:
-      - name: Checkout Repository
-        uses: actions/checkout@v3
-
-      - name: Setup Node.js
-        uses: actions/setup-node@v3
-        with:
-          node-version: 16
-
-      - name: Install Dependencies (For Linting)
-        run: npm install
-
-      - name: Run Linting
-        run: npm run lint
-
-      - name: Upload Lint Report
-        uses: actions/upload-artifact@v3
-        with:
-          name: lint-report
-          path: lint-results.xml
-
-  test:
-    name: Run Tests and Generate Test Report
-    runs-on: ubuntu-latest
-    needs: lint
-    steps:
-      - name: Checkout Repository
-        uses: actions/checkout@v3
-
-      - name: Setup Node.js
-        uses: actions/setup-node@v3
-        with:
-          node-version: 16
-
-      - name: Install Dependencies (For Testing)
-        run: npm install
-
-      - name: Run Tests
-        run: npm test -- --reporters=default --reporters=jest-junit
-
-      - name: Upload Test Report
-        uses: actions/upload-artifact@v3
-        with:
-          name: test-report
-          path: junit.xml
-
   deploy:
     name: Deploy Application
     runs-on: ubuntu-latest
-    needs: test
+    needs: build  # Only runs after the build job passes
+    if: success()  # Ensures this job only runs if build passes
     environment:
       name: production
       url: http://example.com
@@ -119,3 +96,29 @@ jobs:
           echo "API Key: $API_KEY"
           echo "Database URL: $DATABASE_URL"
           echo "Port: $PORT"
+
+  lint:
+    name: Run Linting and Generate Lint Report
+    runs-on: ubuntu-latest
+    needs: build  # Runs after build
+    if: success()  # Runs only if build succeeds
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v3
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: 16
+
+      - name: Install Dependencies (For Linting)
+        run: npm install
+
+      - name: Run Linting
+        run: npm run lint
+
+      - name: Upload Lint Report
+        uses: actions/upload-artifact@v3
+        with:
+          name: lint-report
+          path: lint-results.xml
