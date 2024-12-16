@@ -6,7 +6,8 @@
   "scripts": {
     "test": "echo \"No tests yet\"",
     "lint": "eslint . --ext .js --format node_modules/eslint-formatter-junit --output-file lint-results.xml",
-    "build": "echo \"Build step executed\""
+    "build": "echo \"Build step executed\"",
+    "start": "node src/app.js"  // Add this line to define the start script
   },
   "dependencies": {
     "dotenv": "^16.4.7",
