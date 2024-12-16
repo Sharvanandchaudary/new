@@ -24,13 +24,15 @@ jobs:
         with:
           node-version: 16
       - name: Cache Node.js modules
+        id: Cache
         uses: actions/cache@v3
         with:
-          path: ~/.npm
+          path: node_modules
           key: npm-cache-${{ runner.os }}-${{ hashFiles('**/package-lock.json') }}
           restore-keys: |
             npm-cache-${{ runner.os }}-
       - name: Install dependencies
+        if: steps.Cache.outputs.Cache-hit !='true'
         run: npm install
       - name: Build the application
         run: npm run build
