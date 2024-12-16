@@ -55,6 +55,9 @@ jobs:
         with:
           node-version: 16
 
+      - name: Install Dependencies (For Linting)
+        run: npm install
+
       - name: Run Linting
         run: npm run lint
 
@@ -76,6 +79,9 @@ jobs:
         uses: actions/setup-node@v3
         with:
           node-version: 16
+
+      - name: Install Dependencies (For Testing)
+        run: npm install
 
       - name: Run Tests
         run: npm test -- --reporters=default --reporters=jest-junit
